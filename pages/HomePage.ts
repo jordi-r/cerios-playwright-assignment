@@ -9,4 +9,19 @@ export class HomePage extends BasePage {
   async open() {
     await this.goto("/");
   }
+
+  async search(query: string) {
+    await this.page.locator('[data-test="search-query"]').fill(query);
+    await this.page.locator('[data-test="search-submit"]').click();
+  }
+
+  searchCaption() {
+    return this.page.locator('[data-test="search-caption"]');
+  }
+
+  productByName(name: string) {
+    return this.page
+      .locator('[data-test="product-name"]')
+      .filter({ hasText: name });
+  }
 }
