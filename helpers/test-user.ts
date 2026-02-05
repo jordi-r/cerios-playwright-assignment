@@ -37,7 +37,8 @@ export function createTestUser(): TestUser {
 export const INVALID_DATA = {
   postalCode: "INVALID",
   weakPassword: "123", // Too short
-  invalidEmail: "not-an-email",
+  wrongPassword: "wrong-password",
+  invalidEmail: "nonexistent.user@example.com",
   oldBirthDate: "1940-01-01", // > 75 years old
   futureBirthDate: "2030-01-01",
 };
