@@ -11,11 +11,43 @@ export class RegistrationPage extends BasePage {
     await this.goto("/auth/register");
   }
 
+  // Field helpers
+
+  async fillFirstName(value: string) {
+    await this.page.locator('[data-test="first-name"]').fill(value);
+  }
+
+  async fillLastName(value: string) {
+    await this.page.locator('[data-test="last-name"]').fill(value);
+  }
+
+  async fillBirthDate(value: string) {
+    await this.page.locator('[data-test="dob"]').fill(value);
+  }
+
+  async fillPhone(value: string) {
+    await this.page.locator('[data-test="phone"]').fill(value);
+  }
+
+  async fillEmail(value: string) {
+    await this.page.locator('[data-test="email"]').fill(value);
+  }
+
+  async fillPassword(value: string) {
+    await this.page.locator('[data-test="password"]').fill(value);
+  }
+
+  async submit() {
+    await this.page.locator('[data-test="register-submit"]').click();
+  }
+
+  // Happy path
+
   async register(user: TestUser) {
     // Personal info
-    await this.page.locator('[data-test="first-name"]').fill(user.firstName);
-    await this.page.locator('[data-test="last-name"]').fill(user.lastName);
-    await this.page.locator('[data-test="dob"]').fill(user.dateOfBirth);
+    await this.fillFirstName(user.firstName);
+    await this.fillLastName(user.lastName);
+    await this.fillBirthDate(user.dateOfBirth);
 
     // Address
     await this.page.locator('[data-test="street"]').fill(user.address);
@@ -27,13 +59,13 @@ export class RegistrationPage extends BasePage {
     await this.page.locator('[data-test="country"]').selectOption(user.country);
 
     // Contact
-    await this.page.locator('[data-test="phone"]').fill(user.phone);
-    await this.page.locator('[data-test="email"]').fill(user.email);
+    await this.fillPhone(user.phone);
+    await this.fillEmail(user.email);
 
     // Password
-    await this.page.locator('[data-test="password"]').fill(user.password);
+    await this.fillPassword(user.password);
 
     // Submit
-    await this.page.locator('[data-test="register-submit"]').click();
+    await this.submit();
   }
 }
