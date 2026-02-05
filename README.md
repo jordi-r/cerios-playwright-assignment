@@ -12,7 +12,7 @@ This framework demonstrates a scalable test automation setup following industry 
 - **Environment-based configuration** for flexibility
 - **Meaningful test coverage** of critical user flows
 
-**Created as assignment for Cerios application process.**
+**Created as part of the Cerios application process.**
 
 ---
 
@@ -153,7 +153,7 @@ cerios-playwright-assignment/
 | User login flow                   | ✅     |
 | Add product to cart               | ✅     |
 | Remove product from cart          | ✅     |
-| End-to-end purchase flow          | ✅     |
+| End-to-end shop flow              | ✅     |
 
 ---
 
