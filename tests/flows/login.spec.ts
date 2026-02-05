@@ -1,36 +1,49 @@
 import { test, expect } from "@playwright/test";
 import { LoginPage } from "../../pages/LoginPage";
+import { RegistrationPage } from "../../pages/RegistrationPage";
+import { createTestUser } from "../../helpers/test-user";
+import { registerNewUser } from "../../helpers/account-setup";
 
-const VALID_EMAIL = process.env.TEST_USER_EMAIL;
-const VALID_PASSWORD = process.env.TEST_USER_PASSWORD;
 const WRONG_PASSWORD = "wrong-password";
 
-// Validate environment variables immediately
-if (!VALID_EMAIL || !VALID_PASSWORD) {
-  throw new Error("TEST_USER_EMAIL and TEST_USER_PASSWORD must be set in .env");
-}
-
 test.describe("Login flow", () => {
-  test("user can log in with valid credentials", async ({ page }) => {
-    const loginPage = new LoginPage(page);
-
-    await loginPage.open();
-    await loginPage.login(VALID_EMAIL, VALID_PASSWORD);
-
-    // Assert: user is logged in
-    await expect(page.locator('[data-test="nav-menu"]')).toContainText(
-      "Jordi Ruijs",
-    );
-    await expect(page).toHaveURL(/\/account/);
-  });
-
   test("user sees error message with invalid password", async ({ page }) => {
+    const user = createTestUser();
+    const registrationPage = new RegistrationPage(page);
     const loginPage = new LoginPage(page);
 
+    // Arrange: register a new user
+    await registrationPage.open();
+    await registrationPage.register(user);
+
+    // Act: try to log in with wrong password
     await loginPage.open();
-    await loginPage.login(VALID_EMAIL, WRONG_PASSWORD);
+    await loginPage.login(user.email, WRONG_PASSWORD);
 
     // Assert: error message is shown
     await loginPage.assertLoginError();
+  });
+
+  test("user can log in with valid credentials", async ({ page }) => {
+    const user = createTestUser();
+    const registrationPage = new RegistrationPage(page);
+    const loginPage = new LoginPage(page);
+
+    // Arrange: register a new user
+    await registrationPage.open();
+    await registrationPage.register(user);
+
+    await expect(page).toHaveURL(/auth\/login/);
+
+    // Act: log in with correct credentials
+    await loginPage.open();
+    await loginPage.login(user.email, user.password);
+
+    // Assert: user is logged in
+
+    await expect(page).toHaveURL(/\/account/, { timeout: 10000 });
+    await expect(page.locator('[data-test="nav-menu"]')).toContainText(
+      "Test User",
+    );
   });
 });
