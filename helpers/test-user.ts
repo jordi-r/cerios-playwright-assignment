@@ -35,10 +35,10 @@ export function createTestUser(): TestUser {
 
 // Test data constants for edge cases
 export const INVALID_DATA = {
-  postalCode: "INVALID",
-  weakPassword: "123", // Too short
+  weakPassword: "123", // Missing complexity
   wrongPassword: "wrong-password",
-  invalidEmail: "nonexistent.user@example.com",
-  oldBirthDate: "1940-01-01", // > 75 years old
-  futureBirthDate: "2030-01-01",
+  wrongEmail: "nonexistent.user@example.com",
+  invalidEmail: "invalid-email-format",
+  invalidBirthDate: "01-01-1940",
+  invalidPhone: "text-instead-of-numbers",
 };

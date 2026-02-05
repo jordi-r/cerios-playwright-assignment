@@ -10,7 +10,7 @@ test.describe("Login flow", () => {
     const loginPage = new LoginPage(page);
 
     await loginPage.open();
-    await loginPage.login(INVALID_DATA.invalidEmail, INVALID_DATA.weakPassword);
+    await loginPage.login(INVALID_DATA.wrongEmail, INVALID_DATA.weakPassword);
 
     await loginPage.assertLoginError();
     await expect(page).toHaveURL(/auth\/login/i);
