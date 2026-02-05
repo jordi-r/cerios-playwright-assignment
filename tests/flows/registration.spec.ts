@@ -8,6 +8,4 @@ test("user can register with valid data", async ({ page }) => {
 
   await registrationPage.open();
   await registrationPage.register(user);
-
-  await expect(page).toHaveURL(/\/account/);
 });

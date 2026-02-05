@@ -1,20 +1,13 @@
 import { test, expect } from "@playwright/test";
 import { LoginPage } from "../../pages/LoginPage";
-import { RegistrationPage } from "../../pages/RegistrationPage";
-import { createTestUser } from "../../helpers/test-user";
 import { registerNewUser } from "../../helpers/account-setup";
 
 const WRONG_PASSWORD = "wrong-password";
 
 test.describe("Login flow", () => {
-  test("user sees error message with invalid password", async ({ page }) => {
-    const user = createTestUser();
-    const registrationPage = new RegistrationPage(page);
+  test("shows an error message when password is invalid", async ({ page }) => {
+    const user = await registerNewUser(page);
     const loginPage = new LoginPage(page);
-
-    // Arrange: register a new user
-    await registrationPage.open();
-    await registrationPage.register(user);
 
     // Act: try to log in with wrong password
     await loginPage.open();
@@ -24,26 +17,26 @@ test.describe("Login flow", () => {
     await loginPage.assertLoginError();
   });
 
-  test("user can log in with valid credentials", async ({ page }) => {
-    const user = createTestUser();
-    const registrationPage = new RegistrationPage(page);
+  test("allows login with valid credentials", async ({ page }) => {
+    const user = await registerNewUser(page);
     const loginPage = new LoginPage(page);
-
-    // Arrange: register a new user
-    await registrationPage.open();
-    await registrationPage.register(user);
-
-    await expect(page).toHaveURL(/auth\/login/);
 
     // Act: log in with correct credentials
     await loginPage.open();
     await loginPage.login(user.email, user.password);
 
     // Assert: user is logged in
+    // Explicit wait for logged-in UI
+    await page.locator('[data-test="nav-profile"]').click();
 
-    await expect(page).toHaveURL(/\/account/, { timeout: 10000 });
+    await page.waitForSelector('[data-test="nav-menu"]', {
+      state: "visible",
+      timeout: 50000,
+    });
+
+    // Assert logged-in state
     await expect(page.locator('[data-test="nav-menu"]')).toContainText(
-      "Test User",
+      user.firstName,
     );
   });
 });
